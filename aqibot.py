@@ -7,7 +7,7 @@ def textReply(msg):
 
 def needProtect():
     unhealthy = airquality.anyUnhealthyAqi()
-    return '戴口罩' if unhealthy else '放轻松'
+    return '根据上海市未来12小时AQI预测数据，建议您在接下来的12小时内%s' & '戴口罩' if unhealthy else '放轻松'
 
 @itchat.msg_register(FRIENDS)
 def add_friend(msg):
