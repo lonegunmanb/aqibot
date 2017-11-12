@@ -29,16 +29,24 @@ cityCodes = {'shanghai': '1437'}
 def getAqiServiceUrl(city):
     return 'https://api.waqi.info/api/feed/@%s/obs.cn.json' % cityCodes[city]
 
-def getAqiList(city='shanghai'):
+def getAqiList(city=None):
+    if city is None:
+        city = 'shanghai'
     aqiHttpRequest = requests.get(getAqiServiceUrl(city), headers=get_chrome_user_headers())
     qualityJson = aqiHttpRequest.json()
     aqiList = qualityJson['rxs']['obs'][0]['msg']['forecast']['aqi']
     return aqiList
 
-def getAqi(datetime=datetime.datetime.now()):
+def getAqi(time=None):
+    if time is None:
+        time = datetime.datetime.now()
     aqiList = getAqiList()
-    dailyAqi = [tuple for tuple in aqiList if isTimeAppropriate(datetime, toLocalTime(tuple['t']))]
+    dailyAqi = [tuple for tuple in aqiList if isTimeAppropriate(time, toLocalTime(tuple['t']))]
     return dailyAqi
 
-def anyUnhealthyAqi(dailyAqi=getAqi(), threshold=100):
+def anyUnhealthyAqi(dailyAqi=None, threshold=None):
+    if dailyAqi is None:
+        dailyAqi = getAqi()
+    if threshold is None:
+        threshold = 100
     return any(aqi for aqi in map(lambda tuple:tuple['v'], dailyAqi) if (any(value for value in aqi if int(value) > threshold)))
