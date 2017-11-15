@@ -45,8 +45,12 @@ def getAqi(time=None):
     return dailyAqi
 
 def anyUnhealthyAqi(dailyAqi=None, threshold=None):
-    if dailyAqi is None:
-        dailyAqi = getAqi()
-    if threshold is None:
-        threshold = 100
-    return any(aqi for aqi in map(lambda tuple:tuple['v'], dailyAqi) if (any(value for value in aqi if int(value) > threshold)))
+    while True:
+        try:
+            if dailyAqi is None:
+                dailyAqi = getAqi()
+            if threshold is None:
+                threshold = 100
+            return any(aqi for aqi in map(lambda tuple:tuple['v'], dailyAqi) if (any(value for value in aqi if int(value) > threshold)))
+        except:pass
+        else:break
