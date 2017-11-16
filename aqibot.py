@@ -5,7 +5,12 @@ from threading import Thread
 
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING])
 def textReply(msg):
-    msg.user.send(needProtect())
+    reply = ''
+    if msg.text == 'ts':
+        reply = airquality.getQualityTimestamp()
+    else:
+        reply = needProtect()
+    msg.user.send(reply)
 
 def needProtect():
     unhealthy = airquality.anyUnhealthyAqi()

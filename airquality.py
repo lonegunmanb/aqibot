@@ -32,10 +32,14 @@ def getAqiServiceUrl(city):
 def getAqiList(city=None):
     if city is None:
         city = 'shanghai'
-    aqiHttpRequest = requests.get(getAqiServiceUrl(city), headers=get_chrome_user_headers())
-    qualityJson = aqiHttpRequest.json()
+    qualityJson = getQualityJson(city)
     aqiList = qualityJson['rxs']['obs'][0]['msg']['forecast']['aqi']
     return aqiList
+
+def getQualityJson(city):
+    aqiHttpRequest = requests.get(getAqiServiceUrl(city), headers=get_chrome_user_headers())
+    qualityJson = aqiHttpRequest.json()
+    return qualityJson
 
 def getAqi(time=None):
     if time is None:
@@ -43,6 +47,12 @@ def getAqi(time=None):
     aqiList = getAqiList()
     dailyAqi = [tuple for tuple in aqiList if isTimeAppropriate(time, toLocalTime(tuple['t']))]
     return dailyAqi
+
+def getQualityTimestamp(city=None):
+    if city is None:
+        city = 'shanghai'
+    qualityJson = getQualityJson(city)
+    return str(qualityJson['rxs']['obs'][0]['msg']['timestamp'])
 
 def anyUnhealthyAqi(dailyAqi=None, threshold=None):
     while True:
