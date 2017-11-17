@@ -35,7 +35,7 @@ def runScheduler():
         schedule.run_pending()
         time.sleep(10)
 
-schedule.every().day.at("07:00").do(sendWarningToAllFriends)
+schedule.every().day.at("23:00").do(sendWarningToAllFriends)
 itchat.auto_login()
 thread = Thread(target=runScheduler)
 thread.start()
